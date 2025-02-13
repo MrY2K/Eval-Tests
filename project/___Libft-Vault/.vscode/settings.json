@@ -1,0 +1,12 @@
+
+{
+	"[c]": {
+	  "editor.defaultFormatter": "keyhr.42-c-format"
+	},
+	"files.autoSave": "afterDelay",
+	"github.copilot.editor.enableAutoCompletions": false,
+	"github.copilot.showEditorStatusIcon": false,
+	"files.associations": {
+		"libft.h": "c"
+	},
+  }
