@@ -6,7 +6,7 @@
 /*   By: achoukri <achoukri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 18:11:36 by achoukri          #+#    #+#             */
-/*   Updated: 2025/02/13 18:01:14 by achoukri         ###   ########.fr       */
+/*   Updated: 2025/02/14 00:47:19 by achoukri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	has_duplicates(t_stack_node *head)
 	t_stack_node	*checker;
 
 	if (!head)
-		return (0);
+		return (1);
 	current = head;
 	while (current)
 	{

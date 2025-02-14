@@ -6,7 +6,7 @@
 /*   By: achoukri <achoukri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 14:57:36 by achoukri          #+#    #+#             */
-/*   Updated: 2025/02/13 17:58:22 by achoukri         ###   ########.fr       */
+/*   Updated: 2025/02/14 00:56:33 by achoukri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,14 @@ int				reverse_rotate(t_stack_node **stack);
 int				rra(t_stack_node **stack);
 int				rrb(t_stack_node **stack);
 int				rrr(t_stack_node **stack_a, t_stack_node **stack_b);
+
+//Sorting
+int				sorted(t_stack_node *stack_a);
+void			indexing(t_stack_node *stack_a);
+void			small_stack_sort(t_stack_node **stack_a, t_stack_node **stack_b);
+void			sort_two(t_stack_node **stack_a);
+void			sort_three(t_stack_node **stack_a);
+void			sort_four(t_stack_node **stack_a, t_stack_node **stack_b);
+void			sort_five(t_stack_node **stack_a, t_stack_node **stack_b);
 
 #endif

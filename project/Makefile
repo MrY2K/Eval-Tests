@@ -17,6 +17,7 @@ SRC = src/main.c \
       src/helpers/ft_validate_input.c \
       src/helpers/ft_free.c \
       src/helpers/ft_error.c \
+      src/helpers/sorting.c \
       src/ops/ops1.c \
       src/ops/ops2.c \
       src/ops/ops3.c
