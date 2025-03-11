@@ -1,0 +1,520 @@
+STRLCPY
+/*
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
+
+size_t	ft_strlcpy(char *dest, char *src, size_t dstsize)
+{
+	size_t	dest_len;
+	size_t	src_len;
+	size_t	i;
+
+	i = 0;
+	dest_len = ft_strlen(dest);
+	src_len = ft_strlen(src);
+	
+	if (dstsize != 0)
+	{
+		while (src[i] != '\0' && i < dstsize - 1)
+		{
+			dest[i + dest_len] = src[i];
+			i++;
+		}
+		dest[i] = '\0';
+	}
+	return (src_len);
+}
+void test_strlcpy(char *test_name, char *src, size_t dstsize, size_t expected_ret)
+{
+    char dest[50] = "Hello";  // Initialize with some content
+    size_t ret;
+
+    printf("\nTest: %s\n", test_name);
+    printf("Before - dest: \"%s\", src: \"%s\", dstsize: %zu\n", dest, src, dstsize);
+    
+    ret = ft_strlcpy(dest, src, dstsize);
+    
+    printf("After  - dest: \"%s\"\n", dest);
+    printf("Return value: %zu (Expected: %zu)\n", ret, expected_ret);
+    printf("Test %s\n", ret == expected_ret ? "PASSED ✓" : "FAILED ✗");
+}
+
+int main(void)
+{
+    // Test 1: Normal case
+    test_strlcpy("Normal case", 
+                 "World", 
+                 6,
+                 5);  // "World" length = 5
+    
+    // Test 2: Empty destination size
+    test_strlcpy("Zero dstsize", 
+                 "Test", 
+                 0,
+                 4);  // "Test" length = 4
+    
+    // Test 3: Source longer than dstsize
+    test_strlcpy("Source longer than dstsize", 
+                 "ThisIsLong", 
+                 5,
+                 10);  // "ThisIsLong" length = 10
+    
+    // Test 4: Empty source string
+    test_strlcpy("Empty source", 
+                 "", 
+                 10,
+                 0);  // "" length = 0
+
+    return 0;
+}
+*/
+
+char	*ft_strtrim(char const *s1, char const *set)
+{
+	char	*new;
+	size_t	i;
+	size_t	j;
+	size_t	k;
+
+	if (s1 == NULL || set == NULL)
+		return (NULL);
+	i = 0; // start from the start
+	j = strlen(s1) - 1; // start from the end
+	printf("len of s1 == %lu\n", strlen(s1));
+	printf("j == %lu\n", j);
+
+	while (in_set(s1[i], set) == 1)
+		i++;
+	printf("i == %lu\n", i);
+
+	while (j > i && in_set(s1[j], set) == 1) // this j > i to avoid the case were s1 is all trim chars and j end up 0 and i -n and we cant allocate 0 - n 
+		j--;
+
+	new = calloc((j - i) + 2, sizeof(char));
+	if (new == NULL)
+		return (NULL);
+	printf("allocate == %lu\n", (j - i) +  2);
+	
+	memcpy(new, &s1[i], (j - i) + 1);
+	
+	return (new);
+}
+static int	in_set(char c, char const *set)
+{
+	size_t	i;
+
+	i = 0;
+	while (set[i])
+	{
+		if (c == set[i])
+			return (1);
+		i++;
+	}
+	return (0);
+}
+improved version:
+char	*ft_strtrim(char const *s1, char const *set)
+{
+	char	*new;
+	size_t	i;
+	size_t	j;
+
+	if (s1 == NULL || set == NULL)
+		return (NULL);
+	i = 0;
+	j = ft_strlen(s1);
+	if (j == 0)
+		return (ft_strdup(""));
+	j--;
+	while (in_set(s1[i], set) == 1)
+		i++;
+	while (j > i && in_set(s1[j], set) == 1)
+		j--;
+	if (j < i)
+		return (ft_strdup(""));
+	new = ft_calloc((j - i) + 2, sizeof(char));
+	if (new == NULL)
+		return (NULL);
+	memcpy(new, &s1[i], (j - i) + 1);
+	return (new);
+}
+int main()
+{
+	char *s1 = "a";
+	char *set = "-+ ";
+
+
+	char *res = ft_strtrim(s1, set);
+	
+	printf("\nS1:            ::%s::\n", s1);
+	printf("S2:            ::%s::\n", set);
+	printf("RESAULT        ::%s::\n\n", res);
+	
+	free(res);
+	return 0;
+}
+char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
+{
+	size_t	i;
+	size_t	j;
+
+	if (needle[0] == '\0') //case 1 (needle empty)
+		return((char *)haystack);
+	i = 0;
+	while (i < len && haystack[i]) // iterate in haystack
+	{
+		while (haystack[i + j] == needle[j] && i < len && haystack[i] && needle[j]) //found first char of needle check for the next char of needle 
+		{
+			j++;
+			if (needle[j] == 0) // if they all keep matching and needle ende it means we foun the entire needle inside haystack
+			{
+				return ((char *)&haystack[i]);
+			}
+		}
+		i++;
+		j = 0; // reset the 
+	}
+	return(NULL); //cas 2 (not found)
+}
+static int	digit_counter(int n);
+
+char	*ft_itoa(int n)
+{
+	int		digit_count;
+	char	*tmp;
+	long	nbr;
+	
+	nbr = n;
+	// Get the count for the number[DONR]
+	digit_count = digit_counter(nbr);
+
+	// Allocate Digits + \0;
+	tmp = ft_calloc(digit_count + 1, sizeof(char));
+
+	if (tmp == NULL)
+		return (NULL);
+
+	if (nbr == 0) 
+	{
+		tmp[0] = '0';
+		return (tmp);
+	}
+	
+	if (nbr < 0) //add '- if negative
+ 	{
+		tmp[0] = '-';
+		nbr = -nbr;
+	}
+	
+	while (nbr > 0) //chop
+	{
+		tmp[digit_count - 1] = (nbr % 10) + 48;
+		
+		nbr = nbr / 10;
+		
+		digit_count--;
+	}
+	return (tmp);
+}
+
+static int	digit_counter(int n)
+{
+	unsigned int count = 0;
+	long tmp_n = n;
+
+	if (tmp_n == 0)
+		count++;
+
+	if (tmp_n < 0)
+	{
+		count++;
+		tmp_n = -tmp_n;
+	}
+	while (tmp_n > 0)
+	{
+		tmp_n = tmp_n / 10;
+		count++;
+	}
+	return (count);
+}
+/*
+int main(void)
+{
+	int n = -2147483648;
+	int n2 = 2147483647;
+	int n3 = 0;
+	
+	char *res = ft_itoa(n);
+	char *res2 = ft_itoa(n2);
+	char *res3 = ft_itoa(n3);
+	
+	printf("\nEXPECTING :%d \n", n);
+	printf("\nGOT       :%s\n\n", res);
+	
+	printf("\nEXPECTING :%d \n", n2);
+	printf("\nGOT       :%s\n\n", res2);
+	
+	printf("\nEXPECTING :%d \n", n3);
+	printf("\nGOT       :%s\n\n", res3);
+	
+	free(res);
+	free(res2);
+	free(res3);
+	return 0;
+}
+*/
+
+SPLIT BUT LEN IS CALCULATED IN THE MALLOC_AND_CPY FUNCTION RATHAR THE SPLIT FUCTION (WORKS)
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: achoukri <achoukri@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/30 17:50:24 by achoukri          #+#    #+#             */
+/*   Updated: 2024/10/31 22:11:19 by achoukri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+static int	word_counter(const char *str, char c);
+static int	len_of_word(const char *str, char c);
+static char	*malloc_and_copy_a_word(const char *s, char c);
+static char	**malloc_and_copy_final(const char* s, char c, size_t words_of_s);
+static void	*free_all(char **to_free, size_t j);
+
+char	**ft_split(char const *s, char c)
+{
+	char	**final;
+	size_t	words_of_s;
+
+	if (s == NULL)
+		return (final = NULL);
+
+	words_of_s = word_counter(s, c);
+
+	final = malloc_and_copy_final(s, c, words_of_s);
+
+	return (final);
+}
+static int	word_counter(const char *s, char c)
+{
+	int	words;
+	int	in_word_flag;
+
+	words = 0;
+	in_word_flag = 0;
+	while (*s)
+	{
+		if (*s != c)
+		{
+			if (in_word_flag == 0)
+			{
+				in_word_flag = 1;
+				words++;
+			}
+		}
+		else
+			in_word_flag = 0;
+		s++;
+	}
+	return (words);
+}
+
+int	len_of_word(const char *str, char c)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] && str[i] != c)
+		i++;
+	return (i);
+}
+char	*malloc_and_copy_a_word(const char *s, char c)
+{
+	char	*word;
+	size_t	i;
+	size_t	len;
+
+	i = 0;
+	len = len_of_word(&s[i], c);
+	word = malloc(sizeof(char) * (len + 1));
+	if (!word)
+		return (NULL);
+
+	while (i < len)
+	{
+		word[i] = s[i];
+		i++;
+	}
+	word[i] = '\0';
+	return (word);
+}
+char	**malloc_and_copy_final(const char* s, char c, size_t words_of_s)
+{
+	char	**final;
+	size_t	i;
+	size_t	j;
+
+	final = (char **)malloc(sizeof(char *) * (words_of_s + 1));
+	if (final == NULL)
+		return (NULL);
+	j = 0;
+	i = 0;
+	while (s[i])
+	{
+		while (s[i] == c && s[i]) //skip del (until you hit the start of the word)
+			i++;
+		if (s[i] != c && s[i])
+		{
+			final[j] = malloc_and_copy_a_word(&s[i], c); // allocate and cpy the word
+			if (final[j] == NULL)
+				return(free_all(final, j));
+			while (s[i] != c && s[i])
+				i++;
+			j++;
+		}
+	}
+	final[j] = NULL;
+	return (final);
+}
+static void	*free_all(char **to_free, size_t j)
+{
+	while (j > 0)
+	{
+		free(to_free[j - 1]);
+		j--;
+	}
+	free(to_free);
+	return (NULL);
+}
+int	main (void)
+{
+    char **result = ft_split(",Hellow,42,World,1337", ',');
+
+	for (size_t i = 0; result[i] != NULL; i++)
+	{
+		printf("[%lu] ", i);
+		printf("%s\n", result[i]);
+		free(result[i]); // Free each word after printing
+	}
+	free(result); // Free the result array itself
+
+	return 0;
+}
+
+Exercices the older student posed on me:
+//free
+#include <stdio.h>
+#include <fcntl.h>
+void ll()
+{
+system("leaks -q a.out");
+}
+
+int main()
+{
+
+int fd = open("test.txt", O_CREAT | O_RDWR);
+
+ft_putstr_fd("hello world",fd);
+
+
+}
+
+#include "libft.h"
+#include <stdio.h>
+void ll()
+{
+system("leaks -q a.out");
+}
+
+int main()
+{
+
+        char *str = "A B C  D E    F              G             H            I        ";
+        char** split = ft_split(str,' ');
+
+        int i = 0;
+        while (split[i])
+        {
+                printf("%s\n", split[i]);
+                free(split);
+
+                i++;
+        }
+        free(split);
+
+atexit(ll);
+
+}
+
+
+//void pointers
+#include "libft.h"
+#include <stdio.h>
+
+typedef struct p_list{
+        int age;
+        char* name;
+} k_list;
+
+int main()
+{
+        k_list s;
+        s.age = 15;
+        s.name = "Abdderafie";
+        void* ptr;
+
+        printf("%s\n", ptr)
+}
+
+// make me an array of pointers to function int (*func_ptr[3])(int, int)
+int add(int a , int b) {return a+b;}
+int sub(int a ,int b){return a-b;}
+int mul(int a ,int b){return a*b;}
+int main()
+{
+        //int (*p) = add;
+        int (*p)arr[];
+}
+
+
+
+// send an by refrence
+void f(int **p)
+{
+        int b = 1337;
+        *p = &b;
+}
+int main()
+{
+        int a = 42;
+        int *ptr = &a;
+
+        f(&ptr);
+        printf("%d", *ptr);
+}
+
+int main()
+{
+        int a = 2147483647 // 1337
+        memset(a, 0,);
+}
+
+//* To Do:
+////////////Make file redo understand well
+////////////mem functions: mem set must have unsiged char
+recode the list functions
+////////////Recheck each function
+////////////find somone to recode you .
+//
